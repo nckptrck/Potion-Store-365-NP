@@ -36,7 +36,15 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print(wholesale_catalog)
 
-    return [
+    with engine.begin() as connection:
+    potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions FROM global_inventory"))
+    red_potions = potions_result.first()
+
+    
+
+
+    if red_potions < 10:
+         return [
         {
             "sku": "SMALL_RED_BARREL",
             "quantity": 1,

@@ -5,7 +5,9 @@ from sqlalchemy import create_engine
 def database_connection_url():
     dotenv.load_dotenv()
 
-    return os.environ.get("POSTGRES_URI")
+    uri = os.environ.get("POSTGRES_URI")
+    print("Loaded PostgreSQL URI:", uri)  
+    return uri
 
 engine = create_engine(database_connection_url(), pool_pre_ping=True)
 

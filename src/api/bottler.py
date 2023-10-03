@@ -6,8 +6,6 @@ from src.api import auth
 import sqlalchemy
 from src import database as db
 
-with db.engine.begin() as connection:
-        result = connection.execute(sql_to_execute)
 
 router = APIRouter(
     prefix="/bottler",
@@ -22,6 +20,10 @@ class PotionInventory(BaseModel):
 @router.post("/deliver")
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
+    num_potions = potions_delivered[0].quantity
+    
+    with engine.begin() as connection:
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + %s", (num_potions)))
     print(potions_delivered)
 
     return "OK"
@@ -39,7 +41,8 @@ def get_bottle_plan():
 
     # Initial logic: bottle all barrels into red potions.
     with engine.begin() as connection:
-    potions_result = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory"))
+        potions_result = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory"))
+    
     red_ml = potions_result.first()
     if red_ml >= 100:
         make_potions = red_ml // 100
@@ -49,3 +52,5 @@ def get_bottle_plan():
                     "quantity": make_potions,
                 }
             ]
+    else:
+         return {}

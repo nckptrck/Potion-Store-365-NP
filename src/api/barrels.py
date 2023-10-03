@@ -5,8 +5,6 @@ from src.api import auth
 import sqlalchemy
 from src import database as db
 
-with db.engine.begin() as connection:
-        result = connection.execute(sql_to_execute)
 
 router = APIRouter(
     prefix="/barrels",
@@ -25,7 +23,20 @@ class Barrel(BaseModel):
 
 @router.post("/deliver")
 def post_deliver_barrels(barrels_delivered: list[Barrel]):
-    """ """
+    total_price = 0
+    ml_in_barrels = 0
+    for barrel in barrels_delivered:
+         total_price += barrel.price * barrel.quantity
+         ml_in_barrels = barrel.ml_per_barrel * barrel.quantity
+         
+         with engine.begin() as connection:
+            connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + %s", (ml_in_barrels)))
+    
+    with engine.begin() as connection:
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold - %s", (total_price)))
+  
+
+
     print(barrels_delivered)
 
     return "OK"
@@ -52,4 +63,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
             "sku": "SMALL_RED_BARREL",
             "quantity": 1,
         }
-    ]
+         ]
+    else:
+        return {}
+    

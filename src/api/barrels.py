@@ -51,7 +51,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions FROM global_inventory"))
         red_potions = potions_result.first()
 
-    with engine.begin() as connection:
         gold_result = connection.execute(sqlalchemy.text("SELECT gold FROM global_inventory"))
         gold = gold_result.first()
 

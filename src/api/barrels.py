@@ -25,20 +25,17 @@ class Barrel(BaseModel):
 def post_deliver_barrels(barrels_delivered: list[Barrel]):
     total_price = 0
     ml_in_barrels = 0
-    for barrel in barrels_delivered:
-         total_price += barrel.price * barrel.quantity
-         ml_in_barrels = barrel.ml_per_barrel * barrel.quantity
-         
-         update_ml_query = sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + :ml_in_barrels")
-        
-    update_gold_query = sqlalchemy.text("UPDATE global_inventory SET gold = gold - :total_price")
+    update_ml_query = sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + :ml_in_barrels")
 
+    for barrel in barrels_delivered:
+        total_price += barrel.price * barrel.quantity
+        ml_in_barrels = barrel.ml_per_barrel * barrel.quantity
+
+        with db.engine.begin() as connection:
+            connection.execute(update_ml_query, ml_in_barrels=ml_in_barrels)
 
     with db.engine.begin() as connection:
-        connection.execute(update_ml_query, ml_in_barrels=ml_in_barrels)
-        connection.execute(update_gold_query, total_price=total_price)
-
-  
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold - :total_price"), total_price=total_price)
 
 
     print(barrels_delivered)

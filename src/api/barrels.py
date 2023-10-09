@@ -48,6 +48,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print("Catalog: ",wholesale_catalog)
+    print("VERSION: ", sqlalchemy.__version__)
 
     with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions, gold FROM global_inventory"))

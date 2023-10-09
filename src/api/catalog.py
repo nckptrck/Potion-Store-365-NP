@@ -13,7 +13,7 @@ def get_catalog():
     """
 
     # Can return a max of 20 items.
-    with engine.begin() as connection:
+    with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions FROM global_inventory"))
         red_potions = potions_result.first()
     if red_potions > 0:

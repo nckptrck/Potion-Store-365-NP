@@ -43,7 +43,8 @@ def get_bottle_plan():
     with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT num_red_ml FROM global_inventory"))
     
-    red_ml = potions_result.first()
+    row = potions_result.first()
+    red_ml = row[0]
     if red_ml >= 100:
         make_potions = red_ml // 100
         return [

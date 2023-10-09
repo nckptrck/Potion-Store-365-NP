@@ -25,17 +25,16 @@ class Barrel(BaseModel):
 def post_deliver_barrels(barrels_delivered: list[Barrel]):
     total_price = 0
     ml_in_barrels = 0
-    update_ml_query = sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + :ml_in_barrels")
-
     for barrel in barrels_delivered:
-        total_price += barrel.price * barrel.quantity
-        ml_in_barrels = barrel.ml_per_barrel * barrel.quantity
-
-        with db.engine.begin() as connection:
-            connection.execute(update_ml_query, ml_in_barrels=ml_in_barrels)
-
+         total_price += barrel.price * barrel.quantity
+         ml_in_barrels = barrel.ml_per_barrel * barrel.quantity
+         
+         with db.engine.begin() as connection:
+            connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + %s", (ml_in_barrels)))
+    
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold - :total_price"), total_price=total_price)
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold - %s", (total_price)))
+  
 
 
     print(barrels_delivered)
@@ -46,7 +45,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 @router.post("/plan")
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
-    print("Catalog: ", wholesale_catalog)
+    print("Catalog: ",wholesale_catalog)
 
     with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions, gold FROM global_inventory"))

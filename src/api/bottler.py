@@ -21,9 +21,11 @@ class PotionInventory(BaseModel):
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
     num_potions = potions_delivered[0].quantity
+    num_ml = num_potions * 100
     
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + :num_potions"), parameters= dict(num_potions = num_potions))
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml + :num_ml"), parameters= dict(num_ml = num_ml))
     print(potions_delivered)
 
     return "OK"

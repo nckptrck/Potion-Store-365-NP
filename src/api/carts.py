@@ -74,7 +74,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
         else:
             items.append({"sku": item_sku, "quantity": cart_item.quantity})
     
- 
+    print(items)
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),

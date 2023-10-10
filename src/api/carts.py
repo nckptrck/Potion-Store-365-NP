@@ -35,8 +35,8 @@ def get_cart(cart_id: int):
         cart = connection.execute(sqlalchemy.text(
             "SELECT items FROM customer_carts WHERE id = :id"), 
             parameters=(dict(id = cart_id)))
-    
-    items = cart[0]
+    cart_data = cart.first()
+    items = cart_data[0]
 
     return {"cart_id": cart_id, "items": items}
     
@@ -57,7 +57,8 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     if not cart:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    items = cart[0]
+    cart_data = cart.first()
+    items = cart_data[0]
 
     valid_skus = ["RED_POTION_0", "BLUE_POTION_0", "GREEN_POTION_0"]
     if item_sku not in valid_skus:

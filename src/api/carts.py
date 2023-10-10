@@ -69,10 +69,10 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
                 found_item = item
                 break
             
-    if found_item:
-        found_item["quantity"] = cart_item.quantity
-    else:
-        items.append({"sku": item_sku, "quantity": cart_item.quantity})
+        if found_item:
+            found_item["quantity"] = cart_item.quantity
+        else:
+            items.append({"sku": item_sku, "quantity": cart_item.quantity})
     
  
     with db.engine.begin() as connection:

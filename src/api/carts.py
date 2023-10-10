@@ -31,11 +31,14 @@ def create_cart(new_cart: NewCart):
 
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
-    red_potion_sku = "RED_POTION_0"
-    blue_potion_sku = "BLUE_POTION_0"
-    green_potion_sku = "GREEN_POTION_0"
+    with db.engine.begin() as connection:
+        cart = connection.execute(sqlalchemy.text(
+            "SELECT items FROM customer_carts WHERE id = :id)"), 
+            parameters=(dict(id = cart_id)))
     
-    return {"cart_id": cart_id, "items": [{"sku": red_potion_sku, "quantity": 1}]}
+    items = cart.fetchone()
+
+    return {"cart_id": cart_id, "items": items}
     
 
 

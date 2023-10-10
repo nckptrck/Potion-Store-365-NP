@@ -61,9 +61,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     
     items = cart_data[0]
 
-    valid_skus = ["RED_POTION_0", "BLUE_POTION_0", "GREEN_POTION_0"]
-    if item_sku not in valid_skus:
-        raise HTTPException(status_code=400, detail="Invalid item SKU")
+    
 
     for item in items:
         if item["sku"] == item_sku:

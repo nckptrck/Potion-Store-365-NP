@@ -96,9 +96,9 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
 
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
-                           parameters={"id": cart_id})
-        items_tuple = connection.execute(sqlalchemy.text("SELECT items from customer_carts WHERE id = :id")).first()
+        
+        items_tuple = connection.execute(sqlalchemy.text("SELECT items from customer_carts WHERE id = :id"), 
+                           parameters={"id": cart_id}).first()
         items = items_tuple[0]
 
         pot_inventory = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_green_potions, num_blue_potions FROM global_inventory"))

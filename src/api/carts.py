@@ -75,7 +75,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),
-                    cparameters={"id": cart_id, "items": items},
+                    parameters={"id": cart_id, "items": items},
                 )
     
     return "OK"

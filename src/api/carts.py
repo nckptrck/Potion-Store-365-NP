@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from src.api import auth
-
+import json
 import sqlalchemy
 from src import database as db
 
@@ -76,11 +76,12 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     else:
         items = [{"sku": item_sku, "quantity": cart_item.quantity}]
     
+    items_json = json.dumps(items)
     print("items2: ",items)
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),
-                    parameters={"id": cart_id, "items": items},
+                    parameters={"id": cart_id, "items": items_json},
                 )
     
     return "OK"

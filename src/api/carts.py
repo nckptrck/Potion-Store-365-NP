@@ -62,11 +62,13 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     items = cart_data[0]
 
     
-
-    for item in items:
-        if item["sku"] == item_sku:
-            item["quantity"] = cart_item.quantity
-            break
+    if items is not None:
+        for item in items:
+            if item["sku"] == item_sku:
+                item["quantity"] = cart_item.quantity
+                break
+            else:
+                items.append({"sku": item_sku, "quantity": cart_item.quantity})
     else:
         items.append({"sku": item_sku, "quantity": cart_item.quantity})
     

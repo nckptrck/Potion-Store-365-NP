@@ -63,19 +63,20 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     print("items1: ", items)
 
     found_item = None
-
-    
-    for item in items:
-        if item["sku"] == item_sku:
-            found_item = item
-            break
-        
-    if found_item:
-        found_item["quantity"] = cart_item.quantity
+    if items is not None:
+        for item in items:
+            if item["sku"] == item_sku:
+                found_item = item
+                break
+            
+        if found_item:
+            found_item["quantity"] = cart_item.quantity
+        else:
+            items.append({"sku": item_sku, "quantity": cart_item.quantity})
     else:
-        items.append({"sku": item_sku, "quantity": cart_item.quantity})
+        items = [{"sku": item_sku, "quantity": cart_item.quantity}]
     
-    print("items2: ", items)
+    print("items2: ",items)
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),

@@ -16,16 +16,24 @@ router = APIRouter(
 class NewCart(BaseModel):
     customer: str
 
+index = 0
 
 @router.post("/")
 def create_cart(new_cart: NewCart):
-    cart_id = 1
-    return {"cart_id": cart_id}
+    global index
+    index += 1
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text(
+            "INSERT INTO customer_carts (customer_name) VALUES (:customer_name)"), 
+            parameters=(dict(customer_name = new_cart.customer)))
+    return {"cart_id": index}
 
 
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
     red_potion_sku = "RED_POTION_0"
+    blue_potion_sku = "BLUE_POTION_0"
+    green_potion_sku = "GREEN_POTION_0"
     
     return {"cart_id": cart_id, "items": [{"sku": red_potion_sku, "quantity": 1}]}
     

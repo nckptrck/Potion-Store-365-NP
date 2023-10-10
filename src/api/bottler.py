@@ -21,12 +21,22 @@ class PotionInventory(BaseModel):
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
 
-    num_potions = potions_delivered[0].quantity
-    num_ml = num_potions * 100
-    
-    with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + :num_potions"), parameters= dict(num_potions = num_potions))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml - :num_ml"), parameters= dict(num_ml = num_ml))
+    for potion in potions_delivered:
+        num_potions = potion.quantity
+        num_ml = num_potions * 100
+
+        if potion.potion_type == [100,0,0,0]: #RED
+            with db.engine.begin() as connection:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + :num_potions"), parameters= dict(num_potions = num_potions))
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml - :num_ml"), parameters= dict(num_ml = num_ml))
+        elif potion.potion_type == [0,100,0,0]: #GREEN
+            with db.engine.begin() as connection:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_potions = num_green_potions + :num_potions"), parameters= dict(num_potions = num_potions))
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_ml = num_green_ml - :num_ml"), parameters= dict(num_ml = num_ml))
+        elif potion.potion_type == [0,0,100,0]: #BLUE
+            with db.engine.begin() as connection:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = num_blue_potions + :num_potions"), parameters= dict(num_potions = num_potions))
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = num_blue_ml - :num_ml"), parameters= dict(num_ml = num_ml))
     print(potions_delivered)
 
     return "OK"

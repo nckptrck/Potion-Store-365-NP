@@ -33,7 +33,7 @@ def create_cart(new_cart: NewCart):
 def get_cart(cart_id: int):
     with db.engine.begin() as connection:
         cart = connection.execute(sqlalchemy.text(
-            "SELECT items FROM customer_carts WHERE id = :id)"), 
+            "SELECT items FROM customer_carts WHERE id = :id"), 
             parameters=(dict(id = cart_id)))
     
     items = cart.fetchone()

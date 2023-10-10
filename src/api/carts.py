@@ -58,8 +58,9 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     if not cart_data:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    
+    print("cartdata: ", cart_data)
     items = cart_data[0]
+    print("items1: ", items)
 
     found_item = None
     if items is not None:
@@ -74,7 +75,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
         else:
             items.append({"sku": item_sku, "quantity": cart_item.quantity})
     
-    print(items)
+    print("items2: ", items)
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),

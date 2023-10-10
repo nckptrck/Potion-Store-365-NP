@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 from pydantic import BaseModel
 from src.api import auth
 import json
@@ -81,7 +81,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     with db.engine.begin() as connection:
         connection.execute(
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),
-                    parameters={"id": cart_id, "items": items_json},
+                    parameters={"id": cart_id, "items": items_json}
                 )
     
     return "OK"
@@ -89,13 +89,49 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
 
 class CartCheckout(BaseModel):
     payment: str
+    gold_paid: int
 
 @router.post("/{cart_id}/checkout")
 def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
 
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions - 1"))
-        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold + 50"))
+        connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
+                           parameters={"id": cart_id})
+        items_tuple = connection.execute(sqlalchemy.text("SELECT items from customer_carts WHERE id = :id")).first()
+        items = items_tuple[0]
 
-    return {"total_potions_bought": 1, "total_gold_paid": 50}
+        pot_inventory = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_green_potions, num_blue_potions FROM global_inventory"))
+        row = pot_inventory.first()
+
+        red_potions = row[0]
+        green_potions = row[1]
+        blue_potions = row[2]
+
+        total_gold = 0
+        for item in items:
+            sku = item.get("sku")
+            quantity = item.get("quantity")
+            if sku == "RED_POTION_0" and quantity <= red_potions:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions - :quant"),
+                           parameters={"quant": quantity})
+                total_gold += (50* quantity)
+            elif sku == "GREEN_POTION_0" and quantity <= green_potions:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_potions = num_green_potions - :quant"),
+                           parameters={"quant": quantity})
+                total_gold += (50* quantity)
+            elif sku == "BLUE_POTION_0" and quantity <= blue_potions:
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = num_blue_potions - :quant"),
+                           parameters={"quant": quantity})
+                total_gold += (50* quantity)
+            else:
+                raise HTTPException(status_code=400, detail=f"Invalid item in cart: SKU={sku}, Quantity={quantity}")
+
+
+
+        connection.execute(sqlalchemy.text("UPDATE global_inventory SET gold = gold + :paid"),
+                           parameters={"paid": total_gold})
+        
+        connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
+                           parameters={"id": cart_id})
+    return {"success": True}

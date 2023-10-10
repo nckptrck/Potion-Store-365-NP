@@ -36,7 +36,8 @@ def get_cart(cart_id: int):
             "SELECT items FROM customer_carts WHERE id = :id"), 
             parameters=(dict(id = cart_id)))
     
-    items = cart.fetchone()
+    cart_data = cart.fetchone()
+    items = cart_data["items"]
 
     return {"cart_id": cart_id, "items": items}
     
@@ -50,15 +51,28 @@ class CartItem(BaseModel):
 @router.post("/{cart_id}/items/{item_sku}")
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
-    red_potion_sku = "RED_POTION_0"
+    cart = connection.execute(sqlalchemy.text(
+            "SELECT items FROM customer_carts WHERE id = :id"), 
+            parameters=(dict(id = cart_id)))
+    
+    cart_data = cart.fetchone()
 
-    if cart_item.sku != red_potion_sku:
-        raise HTTPException(status_code=400, detail="You can only add one red potion to your cart")
+    if not cart_data:
+        raise HTTPException(status_code=404, detail="Cart not found")
+    
+    items = cart_data["items"]
 
-    if cart_item.quantity != 1:
-        raise HTTPException(status_code=400, detail="You can only add one red potion to your cart")
+    valid_skus = ["RED_POTION_0", "BLUE_POTION_0", "GREEN_POTION_0"]
+    if item_sku not in valid_skus:
+        raise HTTPException(status_code=400, detail="Invalid item SKU")
 
-
+    for item in items:
+        if item["sku"] == item_sku:
+            item["quantity"] = cart_item.quantity
+            break
+    else:
+        items.append({"sku": item_sku, "quantity": cart_item.quantity})
+    
     return "OK"
 
 

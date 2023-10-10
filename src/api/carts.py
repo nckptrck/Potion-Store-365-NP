@@ -70,7 +70,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
             else:
                 items.append({"sku": item_sku, "quantity": cart_item.quantity})
     else:
-        items.append({"sku": item_sku, "quantity": cart_item.quantity})
+        items = [{"sku": item_sku, "quantity": cart_item.quantity}]
     
     return "OK"
 

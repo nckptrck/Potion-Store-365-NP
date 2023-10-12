@@ -33,7 +33,7 @@ def get_catalog():
                     "potion_type": [100, 0, 0, 0],
                 }
         catalog.append(red)
-    elif green_potions >0:
+    if green_potions >0:
         green = {
                     "sku": "GREEN_POTION_0",
                     "name": "green potion",
@@ -42,7 +42,7 @@ def get_catalog():
                     "potion_type": [0, 100, 0, 0],
                 }
         catalog.append(green)
-    elif blue_potions >0:
+    if blue_potions >0:
         blue = {
                     "sku": "BLUE_POTION_0",
                     "name": "blue potion",

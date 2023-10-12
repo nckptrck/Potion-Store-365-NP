@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-
+import json
 import sqlalchemy
 from src import database as db
 
@@ -21,28 +21,37 @@ def get_catalog():
     green_potions = row[1]
     blue_potions = row[2]
 
-    return [
-                {
+    catalog = []
+
+    
+    if red_potions > 0:
+        red = {
                     "sku": "RED_POTION_0",
                     "name": "red potion",
                     "quantity": red_potions,
                     "price": 50,
                     "potion_type": [100, 0, 0, 0],
-                },
-                {
+                }
+        catalog.append(red)
+    elif green_potions >0:
+        green = {
                     "sku": "GREEN_POTION_0",
                     "name": "green potion",
                     "quantity": green_potions,
                     "price": 50,
                     "potion_type": [0, 100, 0, 0],
-                },
-                {
+                }
+        catalog.append(green)
+    elif blue_potions >0:
+        blue = {
                     "sku": "BLUE_POTION_0",
                     "name": "blue potion",
                     "quantity": blue_potions,
                     "price": 50,
                     "potion_type": [0, 0, 100, 0],
                 }
+        catalog.append(blue)
+    
 
-        ]
+    return catalog
     

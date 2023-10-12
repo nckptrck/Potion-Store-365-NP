@@ -16,7 +16,7 @@ router = APIRouter(
 class NewCart(BaseModel):
     customer: str
 
-index = 0
+
 
 @router.post("/")
 def create_cart(new_cart: NewCart):
@@ -26,7 +26,13 @@ def create_cart(new_cart: NewCart):
         connection.execute(sqlalchemy.text(
             "INSERT INTO customer_carts (customer_name) VALUES (:customer_name)"), 
             parameters=(dict(customer_name = new_cart.customer)))
-    return {"cart_id": index}
+        
+        row = connection.execute(sqlalchemy.text(
+            "SELECT id FROM customer_carts WHERE custumer_name = :name"), 
+            parameters=(dict(name = new_cart.customer))).first()
+        cart_id = row[0]
+        
+    return {"cart_id": cart_id}
 
 
 @router.get("/{cart_id}")

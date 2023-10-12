@@ -47,7 +47,7 @@ def get_cart(cart_id: int):
 
 class CartItem(BaseModel):
     quantity: int
-    sku: str
+    
 
 
 @router.post("/{cart_id}/items/{item_sku}")

@@ -87,27 +87,28 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
          ]
     elif gold < 320:
          
-         if red_potions == min_potions:
-            return [
-                {
-                    "sku": "SMALL_RED_BARREL",
-                    "quantity": 1
-                }
-                ]
-         elif green_potions == min_potions:
-             return [
-                {
-                    "sku": "SMALL_GREEN_BARREL",
-                    "quantity": 1
-                }
-                ]
-         elif blue_potions == min_potions: 
+         if gold < 120:
+            if red_potions == min_potions:
+                return [
+                    {
+                        "sku": "SMALL_RED_BARREL",
+                        "quantity": 1
+                    }
+                    ]
+            elif green_potions == min_potions:
+                return [
+                    {
+                        "sku": "SMALL_GREEN_BARREL",
+                        "quantity": 1
+                    }
+                    ]
+         else:
             return[
-                {
-                    "sku": "SMALL_BLUE_BARREL",
-                    "quantity": 1
-                }
-                ]
+                    {
+                        "sku": "SMALL_BLUE_BARREL",
+                        "quantity": 1
+                    }
+                    ]
 
 
     else:

@@ -27,6 +27,9 @@ def create_cart(new_cart: NewCart):
         connection.execute(sqlalchemy.text(
             "INSERT INTO customer_carts (customer_name) VALUES (:customer_name)"), 
             parameters=(dict(customer_name = new_cart.customer)))
+        
+
+
     
         
     return {"cart_id": index}

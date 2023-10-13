@@ -72,7 +72,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
 
         min_potions = min(red_potions, green_potions, blue_potions)
 
-    if  gold >= 300:
+    if  gold >= 320:
          return [
         {
             "sku": "SMALL_RED_BARREL",

@@ -89,8 +89,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                            "FROM (SELECT cart_items.potion_id, SUM(potions.price * cart_items.quantity) as total_gold "
                                                  "FROM cart_items "
                                                  "JOIN potions ON potions.id = cart_items.potion_id "
-                                                 "WHERE cart_items.cart_id = :cart_id "
-                                                 "GROUP BY cart_items.potion_id) AS subq "
+                                                 "WHERE cart_items.cart_id = :cart_id ) AS subq "
                                            ),
                                            parameters= dict(cart_id = cart_id))
         

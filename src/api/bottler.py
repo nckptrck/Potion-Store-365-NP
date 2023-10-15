@@ -39,7 +39,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
             
             connection.execute(sqlalchemy.text(
                 "UPDATE resources " 
-                "SET red_ml = red_ml - :red, green_ml = green_ml - green, blue_ml = blue_ml - :blue, dark_ml = dark_ml - :dark"),
+                "SET red_ml = red_ml - :red, green_ml = green_ml - :green, blue_ml = blue_ml - :blue, dark_ml = dark_ml - :dark"),
                 parameters=dict(red = potion.potion_type[0],
                                 green = potion.potion_type[1],
                                 blue = potion.potion_type[2],

@@ -22,10 +22,30 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
 
     for potion in potions_delivered:
-        num_potions = potion.quantity
-        num_ml = num_potions * 100
 
-        if potion.potion_type == [100,0,0,0]: #RED
+        num_potions = potion.quantity
+        print("type: ", potion.potion_type, "\nquantity: ", potion.quantity)
+    
+        with db.engine.begin() as connection:
+            connection.execute(sqlalchemy.text(
+                "UPDATE potions" 
+                "SET inventory = inventory + :num_potions" 
+                "WHERE red = :red AND green = :green AND blue = :blue AND dark = :dark"),
+                parameters= dict(num_potions = num_potions,
+                                 red = potion.potion_type[0],
+                                 green = potion.potion_type[1],
+                                 blue = potion.potion_type[2],
+                                 dark = potion.potion_type[3]))
+            
+            connection.execute(sqlalchemy.text(
+                "UPDATE resources" 
+                "SET red_ml = red_ml - :red, green_ml = green_ml - green, blue_ml = blue_ml - :blue, dark_ml = dark_ml - :dark"),
+                parameters=dict(red = potion.potion_type[0]),
+                                green = potion.potion_type[1],
+                                blue = potion.potion_type[2],
+                                dark = potion.potion_type[3])
+
+    """ if potion.potion_type == [100,0,0,0]: #RED
             with db.engine.begin() as connection:
                 connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + :num_potions"), parameters= dict(num_potions = num_potions))
                 connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml - :num_ml"), parameters= dict(num_ml = num_ml))
@@ -36,7 +56,8 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
         elif potion.potion_type == [0,0,100,0]: #BLUE
             with db.engine.begin() as connection:
                 connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = num_blue_potions + :num_potions"), parameters= dict(num_potions = num_potions))
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = num_blue_ml - :num_ml"), parameters= dict(num_ml = num_ml))
+                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = num_blue_ml - :num_ml"), parameters= dict(num_ml = num_ml))"""
+    
     print(potions_delivered)
 
     return "OK"
@@ -88,7 +109,6 @@ def get_bottle_plan():
             dark = potion[4]
             p_type = [red, green, blue, dark]
             
-
             if red_ml >= red and green_ml >= green and blue_ml >= blue:
                 red_ml -= red
                 green_ml -= green
@@ -99,7 +119,6 @@ def get_bottle_plan():
                         bottle["quantity"] += 1
                         print("quantity:", bottle["quantity"])
     
-
     return bottles
 
                 

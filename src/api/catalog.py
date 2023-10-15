@@ -17,6 +17,7 @@ def get_catalog():
         potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, inventory, price, red, green, blue, dark FROM potions WHERE inventory > 0")).all()
     
     catalog = []
+    print("CATELOG: ")
     for row in potions_result:
         sku = row[0]
         name = row[1]
@@ -27,11 +28,12 @@ def get_catalog():
         blue = row[6]
         dark = row[7]
 
-        print("sku: ", sku, 
+        print("----------------\n","sku: ", sku, 
               "\nname: ", name,
               "\ninventory: ", inventory,
               "\nprice: ", price, 
-              "\npotion type: ", [red,green,blue,dark])
+              "\npotion type: ", [red,green,blue,dark]
+              "\n-----------------")
         
         item = {
                     "sku": sku,

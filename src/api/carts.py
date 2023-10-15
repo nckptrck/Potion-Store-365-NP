@@ -85,10 +85,13 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                            parameters={"id": cart_id})
         
         connection.execute(sqlalchemy.text("UPDATE resources " 
-                                           "SET gold = resources.gold + SUM(potions.price * cart_items.quantity) "
-                                           "FROM cart_items "
-                                           "JOIN potions ON potions.id = cart_items.potion_id "
-                                           "WHERE cart_items.cart_id = :cart_id"),
+                                           "SET gold = resources.gold + subq.total_gold "
+                                           "FROM (SELECT cart_items.potion_id, SUM(potions.price * cart_items.quantity) as total_gold "
+                                                 "FROM cart_items "
+                                                 "JOIN potions ON potions.id = cart_items.potion_id "
+                                                 "WHERE cart_items.cart_id = :cart_id "
+                                                 "GROUPBY cart_items.potion_id AS subq) "
+                                           ),
                                            parameters= dict(cart_id = cart_id))
         
 

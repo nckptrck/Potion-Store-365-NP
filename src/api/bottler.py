@@ -54,14 +54,21 @@ def get_bottle_plan():
 
     # Initial logic: bottle all barrels into red potions.
     with db.engine.begin() as connection:
-        resources = connection.execute(sqlalchemy.text("SELECT red_ml, green_ml, blue_ml FROM resources"))
-        potions = connection.execute(sqlalchemy.text("SELECT name, inventory FROM potions"))
+        resources = connection.execute(sqlalchemy.text("SELECT red_ml, green_ml, blue_ml FROM resources")).first()
+        potions = connection.execute(sqlalchemy.text("SELECT name, red, green, blue, dark, inventory FROM potions"))
+        min_red = connection.execute(sqlalchemy.text("SELECT MIN(red) FROM potions WHERE red > 0")).first()
+        min_green = connection.execute(sqlalchemy.text("SELECT MIN(green) FROM potions WHERE green > 0")).first()
+        min_blue = connection.execute(sqlalchemy.text("SELECT MIN(blue) FROM potions WHERE blue > 0")).first()
     
-    resources = resources.first()
     red_ml = resources[0]
     green_ml = resources[1]
     blue_ml = resources[2]
+
+    min_red = min_red[0]
+    min_green = min_green[0]
+    min_blue = min_blue[0]
     
+    print("RGB mins:", min_red, min_green, min_blue)
     red_potions = red_ml // 100
     green_potions = green_ml // 100
     blue_potions = blue_ml // 100

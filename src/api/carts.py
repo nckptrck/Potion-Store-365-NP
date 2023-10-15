@@ -90,7 +90,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                                  "FROM cart_items "
                                                  "JOIN potions ON potions.id = cart_items.potion_id "
                                                  "WHERE cart_items.cart_id = :cart_id "
-                                                 "GROUPBY cart_items.potion_id AS subq) "
+                                                 "GROUP BY cart_items.potion_id) AS subq "
                                            ),
                                            parameters= dict(cart_id = cart_id))
         

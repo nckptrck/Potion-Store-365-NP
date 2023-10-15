@@ -53,6 +53,17 @@ class CartItem(BaseModel):
 def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
     """ """
     print("Cart ID:", cart_id)
+
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("INSERT INTO cart_items (cart_id, quantity, catalog_id) " 
+                                        "SELECT :cart_id, :quantity, potions.id "
+                                        "FROM potions WHERE potions.sku = :item_sku"),
+                                        parameters= dict(cart_id = cart_id,
+                                                         item_sku = item_sku,
+                                                         quantity = cart_item.quantity))
+        
+    return "OK"
+"""
     with db.engine.begin() as connection:
         cart = connection.execute(sqlalchemy.text(
                 "SELECT items FROM customer_carts WHERE id = :id"), 
@@ -86,8 +97,8 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
                     sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),
                     parameters={"id": cart_id, "items": items_json}
                 )
+    """
     
-    return "OK"
 
 
 class CartCheckout(BaseModel):

@@ -61,7 +61,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
                                         parameters= dict(cart_id = cart_id,
                                                          item_sku = item_sku,
                                                          quantity = cart_item.quantity))
-        
+        connection.commit()
     return "OK"
 """
     with db.engine.begin() as connection:

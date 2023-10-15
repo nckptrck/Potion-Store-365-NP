@@ -20,17 +20,13 @@ class NewCart(BaseModel):
 index = 0
 @router.post("/")
 def create_cart(new_cart: NewCart):
-    global index
-    index +=1
 
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text(
-            "INSERT INTO customer_carts (customer_name) VALUES (:customer_name)"), 
+        index = connection.execute(sqlalchemy.text(
+            "INSERT INTO customer_carts (customer_name) VALUES (:customer_name) RETURNING id"), 
             parameters=(dict(customer_name = new_cart.customer)))
-        
-
-
     
+    index = index.scalar()
         
     return {"cart_id": index}
 

@@ -87,7 +87,7 @@ def get_bottle_plan():
             blue = potion[3]
             dark = potion[4]
             p_type = [red, green, blue, dark]
-            print(p_type)
+            
 
             if red_ml >= red and green_ml >= green and blue_ml >= blue:
                 red_ml -= red
@@ -95,7 +95,9 @@ def get_bottle_plan():
                 blue_ml -= blue
                 for bottle in  bottles:
                     if bottle["potion_type"] == p_type:
+                        print(p_type)
                         bottle["quantity"] += 1
+                        print("quantity:", bottle["quantity"])
     
 
     return bottles

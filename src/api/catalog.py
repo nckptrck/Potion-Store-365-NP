@@ -32,7 +32,7 @@ def get_catalog():
               "\nname: ", name,
               "\ninventory: ", inventory,
               "\nprice: ", price, 
-              "\npotion type: ", [red,green,blue,dark]
+              "\npotion type: ", [red,green,blue,dark],
               "\n-----------------")
         
         item = {

@@ -80,6 +80,17 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                            "FROM cart_items "
                                            "WHERE potions.id = cart_items.potion_id AND cart_items.cart_id = :cart_id"),
                                            parameters= dict(cart_id = cart_id))
+        
+        connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
+                           parameters={"id": cart_id})
+        
+        connection.execute(sqlalchemy.text("UPDATE resources " 
+                                           "SET gold = resources.gold - (potions.price * cart_items.quantity) "
+                                           "FROM cart_items "
+                                           "INNER JOIN potions ON potions.id = cart_items.potion_id "
+                                           "WHERE cart_items.cart_id = :cart_id"),
+                                           parameters= dict(cart_id = cart_id))
+        
 
     return {"success": True}
 

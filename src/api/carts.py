@@ -63,42 +63,7 @@ def set_item_quantity(cart_id: int, item_sku: str, cart_item: CartItem):
                                                          quantity = cart_item.quantity))
         connection.commit()
     return "OK"
-"""
-    with db.engine.begin() as connection:
-        cart = connection.execute(sqlalchemy.text(
-                "SELECT items FROM customer_carts WHERE id = :id"), 
-                parameters=(dict(id = cart_id)))
-    cart_data = cart.fetchone()
-    if not cart_data:
-        raise HTTPException(status_code=404, detail="Cart not found")
-    
-    print("cartdata: ", cart_data)
-    items = cart_data[0]
-    print("items1: ", items)
 
-    found_item = None
-    if items is not None:
-        for item in items:
-            if item["sku"] == item_sku:
-                found_item = item
-                break
-            
-        if found_item:
-            found_item["quantity"] = cart_item.quantity
-        else:
-            items.append({"sku": item_sku, "quantity": cart_item.quantity})
-    else:
-        items = [{"sku": item_sku, "quantity": cart_item.quantity}]
-    
-    items_json = json.dumps(items)
-    print("items2: ",items)
-    with db.engine.begin() as connection:
-        connection.execute(
-                    sqlalchemy.text("UPDATE customer_carts SET items = :items WHERE id = :id"),
-                    parameters={"id": cart_id, "items": items_json}
-                )
-    """
-    
 
 
 class CartCheckout(BaseModel):
@@ -110,7 +75,15 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
 
     with db.engine.begin() as connection:
-        
+        connection.execute(sqlalchemy.text("UPDATE potions " 
+                                           "SET inventory = potions.inventory - cart_items.quantity "
+                                           "FROM cart_items "
+                                           "WHERE potions.id = cart_items.potion_id AND cart_items.cart_id = :cart_id"),
+                                           parameters= dict(cart_id = cart_id))
+
+    return {"success": True}
+
+"""
         items_tuple = connection.execute(sqlalchemy.text("SELECT items from customer_carts WHERE id = :id"), 
                            parameters={"id": cart_id}).first()
         items = items_tuple[0]
@@ -147,5 +120,5 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                            parameters={"paid": total_gold})
         
         connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
-                           parameters={"id": cart_id})
-    return {"success": True}
+                           parameters={"id": cart_id})"""
+    

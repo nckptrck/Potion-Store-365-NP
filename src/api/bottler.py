@@ -44,6 +44,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
                                 green = (potion.potion_type[1] * num_potions),
                                 blue = (potion.potion_type[2] * num_potions) ,
                                 dark = (potion.potion_type[3] * num_potions))
+                                )
 
     """ if potion.potion_type == [100,0,0,0]: #RED
             with db.engine.begin() as connection:

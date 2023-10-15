@@ -14,44 +14,31 @@ def get_catalog():
 
     # Can return a max of 20 items.
     with db.engine.begin() as connection:
-        potions_result = connection.execute(sqlalchemy.text("SELECT num_red_potions, num_green_potions, num_blue_potions FROM global_inventory"))
-        row = potions_result.first()
-        
-    red_potions = row[0]
-    green_potions = row[1]
-    blue_potions = row[2]
-
+        potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, inventory, price, potion_type FROM potions WHERE inventory > 0")).all()
+    
     catalog = []
+    for row in potions_result:
+        sku = row[0]
+        name = row[1]
+        inventory = row[2]
+        price = row[3]
+        potion_type = row[4]
 
-    
-    if red_potions > 0:
-        red = {
-                    "sku": "RED_POTION_0",
-                    "name": "red potion",
-                    "quantity": red_potions,
-                    "price": 50,
-                    "potion_type": [100, 0, 0, 0],
+        print("sku: ", sku, 
+              "\nname: ", name,
+              "\ninventory: ", inventory,
+              "\nprice: ", price, 
+              "\npotion type: ", potion_type)
+        
+        item = {
+                    "sku": sku
+                    "name": name,
+                    "quantity": inventory,
+                    "price": price,
+                    "potion_type": potion_type,
                 }
-        catalog.append(red)
-    if green_potions >0:
-        green = {
-                    "sku": "GREEN_POTION_0",
-                    "name": "green potion",
-                    "quantity": green_potions,
-                    "price": 50,
-                    "potion_type": [0, 100, 0, 0],
-                }
-        catalog.append(green)
-    if blue_potions >0:
-        blue = {
-                    "sku": "BLUE_POTION_0",
-                    "name": "blue potion",
-                    "quantity": blue_potions,
-                    "price": 50,
-                    "potion_type": [0, 0, 100, 0],
-                }
-        catalog.append(blue)
-    
+        
+        catalog.append(item)
 
     return catalog
     

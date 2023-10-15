@@ -31,7 +31,7 @@ def get_catalog():
               "\npotion type: ", potion_type)
         
         item = {
-                    "sku": sku
+                    "sku": sku,
                     "name": name,
                     "quantity": inventory,
                     "price": price,

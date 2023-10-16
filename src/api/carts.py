@@ -34,11 +34,13 @@ def create_cart(new_cart: NewCart):
 @router.get("/{cart_id}")
 def get_cart(cart_id: int):
     with db.engine.begin() as connection:
-        cart = connection.execute(sqlalchemy.text(
-            "SELECT items FROM customer_carts WHERE id = :id"), 
-            parameters=(dict(id = cart_id)))
-    cart_data = cart.first()
-    items = cart_data[0]
+        cart_data = connection.execute(sqlalchemy.text(
+            "SELECT sku, quantity FROM cart_items JOIN potions on potion.id = cart_items.potion_id WHERE cart_items.cart_id = :cart_id").all(),
+            parameters=(dict(cart_id = cart_id)))
+    items = []
+    for item in cart_data:
+        items.append({"sku": item[0],
+                      "quantity": item[1]})
 
     return {"cart_id": cart_id, "items": items}
     

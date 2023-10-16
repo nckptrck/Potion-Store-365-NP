@@ -24,7 +24,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     for potion in potions_delivered:
 
         num_potions = potion.quantity
-        print("type: ", potion.potion_type, "\nquantity: ", potion.quantity)
+        print("type: ", potion.potion_type, "\nquantity: ", potion.quantity, "\n--------")
     
         with db.engine.begin() as connection:
             connection.execute(sqlalchemy.text(
@@ -45,20 +45,6 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
                                 blue = (potion.potion_type[2] * num_potions) ,
                                 dark = (potion.potion_type[3] * num_potions))
                                 )
-
-    """ if potion.potion_type == [100,0,0,0]: #RED
-            with db.engine.begin() as connection:
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_potions = num_red_potions + :num_potions"), parameters= dict(num_potions = num_potions))
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_red_ml = num_red_ml - :num_ml"), parameters= dict(num_ml = num_ml))
-        elif potion.potion_type == [0,100,0,0]: #GREEN
-            with db.engine.begin() as connection:
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_potions = num_green_potions + :num_potions"), parameters= dict(num_potions = num_potions))
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_green_ml = num_green_ml - :num_ml"), parameters= dict(num_ml = num_ml))
-        elif potion.potion_type == [0,0,100,0]: #BLUE
-            with db.engine.begin() as connection:
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_potions = num_blue_potions + :num_potions"), parameters= dict(num_potions = num_potions))
-                connection.execute(sqlalchemy.text("UPDATE global_inventory SET num_blue_ml = num_blue_ml - :num_ml"), parameters= dict(num_ml = num_ml))"""
-    
     print(potions_delivered)
 
     return "OK"
@@ -89,8 +75,6 @@ def get_bottle_plan():
     min_red = min_red[0]
     min_green = min_green[0]
     min_blue = min_blue[0]
-    
-    print("RGB mins:", min_red, min_green, min_blue)
 
     bottles = []
     for potion in potions:

@@ -27,6 +27,7 @@ def create_cart(new_cart: NewCart):
             parameters=(dict(customer_name = new_cart.customer)))
     
     index = index.scalar()
+    print("Cart ID: ", index, "\nCustomer Name: ", new_cart.customer)
         
     return {"cart_id": index}
 

@@ -35,8 +35,8 @@ def create_cart(new_cart: NewCart):
 def get_cart(cart_id: int):
     with db.engine.begin() as connection:
         cart_data = connection.execute(sqlalchemy.text(
-            "SELECT sku, quantity FROM cart_items JOIN potions on potion.id = cart_items.potion_id WHERE cart_items.cart_id = :cart_id").all(),
-            parameters=(dict(cart_id = cart_id)))
+            "SELECT sku, quantity FROM cart_items JOIN potions on potion.id = cart_items.potion_id WHERE cart_items.cart_id = :cart_id"),
+            parameters=(dict(cart_id = cart_id))).all()
     items = []
     for item in cart_data:
         items.append({"sku": item[0],

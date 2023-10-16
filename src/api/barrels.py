@@ -70,7 +70,17 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
 
         min_ml = min(red, green, blue)
 
-    if  gold >= 320:
+    if gold >= 220:
+        return [
+        {
+            "sku": "SMALL_RED_BARREL",
+            "quantity": 1,
+        }, 
+        {
+            "sku": "SMALL_BLUE_BARREL",
+            "quantity": 1,
+        }]
+    elif  gold >= 320:
          return [
         {
             "sku": "SMALL_RED_BARREL",

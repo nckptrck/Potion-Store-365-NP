@@ -82,7 +82,7 @@ def get_bottle_plan():
             green = potion[2]
             blue = potion[3]
             dark = potion[4]
-            bottles.append({"potion_type": [red,green,blue, dark], 
+            bottles.append({"potion_type": [red, green ,blue, dark], 
                             "quantity": 0})
 
     while red_ml >= min_red or green_ml >= min_green or blue_ml >= min_blue:
@@ -103,6 +103,8 @@ def get_bottle_plan():
                         print(p_type)
                         bottle["quantity"] += 1
                         print("quantity:", bottle["quantity"])
+            else:
+                continue
         if (red_ml + blue_ml + green_ml) <= 100:
             break
     

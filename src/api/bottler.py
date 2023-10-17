@@ -105,7 +105,8 @@ def get_bottle_plan():
                         print("quantity:", bottle["quantity"])
             else:
                 break
-        break
+        if (red_ml + blue_ml + green_ml) < 100:
+            break
     
     return bottles
 

@@ -105,6 +105,7 @@ def get_bottle_plan():
                         print("quantity:", bottle["quantity"])
             else:
                 break
+        break
     
     return bottles
 

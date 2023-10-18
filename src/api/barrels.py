@@ -146,8 +146,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     elif gold >= 320:
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
                                "quantity": 1})
-        barrels_copped.append(
-                              {"sku": "SMALL_RED_BARREL",
+        barrels_copped.append({"sku": "SMALL_RED_BARREL",
                                "quantity": 1})
         barrels_copped.append({"sku": "SMALL_GREEN_BARREL",
                                "quantity": 1})

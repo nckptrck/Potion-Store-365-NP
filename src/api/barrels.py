@@ -80,6 +80,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         {
             "sku": "MEDIUM_GREEN_BARREL",
             "quantity": 1,
+        },
+        {
+            "sku": "SMALL_BLUE_BARREL",
+            "quantity": 1,
         }
          ]
     elif gold >= 220:

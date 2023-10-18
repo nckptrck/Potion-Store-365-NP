@@ -42,7 +42,7 @@ def get_catalog():
                     "price": price,
                     "potion_type": [red,green,blue,dark],
                 }
-        if sku != "PINK_POTION_0":
+        if sku != "BLUE_POTION_0":
             catalog.append(item)
 
     return catalog

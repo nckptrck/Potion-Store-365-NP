@@ -101,59 +101,61 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     
     if med_blue and large_green and large_red and gold >= (mb_price + lr_price + lg_price):
         barrels_copped.append({"sku": "MEDIUM_BLUE_BARREL",
-                               "quantity": 1},
-                              {"sku": "LARGE_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "LARGE_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "LARGE_RED_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "LARGE_GREEN_BARREL",
                                "quantity": 1})
         gold -= (mb_price + lr_price + lg_price)
     elif large_green and large_red and gold >= (lr_price + lg_price + 120):
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
-                               "quantity": 1},
-                              {"sku": "LARGE_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "LARGE_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "LARGE_RED_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "LARGE_GREEN_BARREL",
                                "quantity": 1})
         gold -= (lr_price + lg_price + 120)
     elif large_green and large_red and gold >= (lr_price + lg_price):
         barrels_copped.append({"sku": "LARGE_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "LARGE_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "LARGE_GREEN_BARREL",
                                "quantity": 1})
         gold -= (lr_price + lg_price)
     elif med_red and med_green and med_blue and gold >= (mr_price + mg_price + mb_price):
         barrels_copped.append({"sku": "MEDIUM_BLUE_BARREL",
-                               "quantity": 1},
-                              {"sku": "MEDIUM_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "MEDIUM_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "MEDIUM_RED_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "MEDIUM_GREEN_BARREL",
                                "quantity": 1})
         gold -= (mr_price + mg_price + mb_price)
     elif med_red and med_green and gold >= (mr_price + mg_price + 120):
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
-                               "quantity": 1},
-                              {"sku": "MEDIUM_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "MEDIUM_GREEN_BARREL",
                                "quantity": 1})
+        barrels_copped.append({"sku": "MEDIUM_RED_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "MEDIUM_GREEN_BARREL",
+                               "quantity": 1})
+        gold -= (mr_price + mg_price + 120)
     elif med_red and med_green and gold >= (mr_price + mg_price):
         barrels_copped.append({"sku": "MEDIUM_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "MEDIUM_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "MEDIUM_GREEN_BARREL",
                                "quantity": 1})
         gold -= (mr_price + mg_price)
     elif gold >= 320:
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
-                               "quantity": 1},
+                               "quantity": 1})
+        barrels_copped.append(
                               {"sku": "SMALL_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "SMALL_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "SMALL_GREEN_BARREL",
                                "quantity": 1})
         gold -= 320
     elif gold >= 200:
         barrels_copped.append({"sku": "SMALL_RED_BARREL",
-                               "quantity": 1},
-                               {"sku": "SMALL_GREEN_BARREL",
+                               "quantity": 1})
+        barrels_copped.append({"sku": "SMALL_GREEN_BARREL",
                                "quantity": 1})
         gold -= 200
     elif gold >= 100:

@@ -74,15 +74,11 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     if  gold >= 320:
          return [
         {
-            "sku": "SMALL_RED_BARREL",
+            "sku": "MEDIUM_RED_BARREL",
             "quantity": 1,
         }, 
         {
-            "sku": "SMALL_GREEN_BARREL",
-            "quantity": 1,
-        }, 
-        {
-            "sku": "SMALL_BLUE_BARREL",
+            "sku": "MEDIUM_GREEN_BARREL",
             "quantity": 1,
         }
          ]

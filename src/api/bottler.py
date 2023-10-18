@@ -93,7 +93,8 @@ def get_bottle_plan():
             blue = potion[3]
             dark = potion[4]
             p_type = [red, green, blue, dark]
-            
+            if blue == 100:
+                continue
             if red_ml >= red and green_ml >= green and blue_ml >= blue:
                 red_ml -= red
                 green_ml -= green

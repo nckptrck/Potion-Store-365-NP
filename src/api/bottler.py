@@ -76,7 +76,7 @@ def get_bottle_plan():
     min_red = min_red[0]
     min_green = min_green[0]
     min_blue = min_blue[0]
-    
+    potion_count = potion_count[0]
     bottles = []
     for potion in potions:
             red = potion[1]

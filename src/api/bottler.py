@@ -67,6 +67,7 @@ def get_bottle_plan():
         min_red = connection.execute(sqlalchemy.text("SELECT MIN(red) FROM potions WHERE red > 0")).first()
         min_green = connection.execute(sqlalchemy.text("SELECT MIN(green) FROM potions WHERE green > 0")).first()
         min_blue = connection.execute(sqlalchemy.text("SELECT MIN(blue) FROM potions WHERE blue > 0")).first()
+        potion_count = connection.execute(sqlalchemy.text("SELECT SUM(inventory) FROM potions")).first()
     
     red_ml = resources[0]
     green_ml = resources[1]
@@ -75,7 +76,7 @@ def get_bottle_plan():
     min_red = min_red[0]
     min_green = min_green[0]
     min_blue = min_blue[0]
-
+    
     bottles = []
     for potion in potions:
             red = potion[1]
@@ -85,7 +86,7 @@ def get_bottle_plan():
             bottles.append({"potion_type": [red, green ,blue, dark], 
                             "quantity": 0})
 
-    while red_ml >= min_red or green_ml >= min_green or blue_ml >= min_blue:
+    while red_ml >= min_red or green_ml >= min_green or blue_ml >= min_blue and potion_count <=300:
         print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml)
         for potion in potions:
             red = potion[1]
@@ -96,6 +97,7 @@ def get_bottle_plan():
             #if blue == 100:
             #    continue
             if red_ml >= red and green_ml >= green and blue_ml >= blue:
+                potion_count += 1
                 red_ml -= red
                 green_ml -= green
                 blue_ml -= blue
@@ -104,6 +106,7 @@ def get_bottle_plan():
                         print(p_type)
                         bottle["quantity"] += 1
                         print("quantity:", bottle["quantity"])
+                        
             else:
                 continue
 

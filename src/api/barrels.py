@@ -41,6 +41,10 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
             with db.engine.begin() as connection:
                 update_ml_query = sqlalchemy.text("UPDATE resources SET blue_ml = blue_ml + :ml_in_barrels")
                 connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
+        elif pot_type == [0,0,0,1]: #DARK
+            with db.engine.begin() as connection:
+                update_ml_query = sqlalchemy.text("UPDATE resources SET dark_ml = dark_ml + :ml_in_barrels")
+                connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
 
 
 

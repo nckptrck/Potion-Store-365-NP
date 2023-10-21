@@ -16,7 +16,8 @@ def get_catalog():
     with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, inventory, price, red, green, blue, dark "
                                                             "FROM potions WHERE inventory > 0 "
-                                                            "ORDER BY inventory DESC")).limit(6).all()
+                                                            "ORDER BY inventory DESC "
+                                                            "LIMIT 6")).all()
     
     catalog = []
     print("CATELOG: ")

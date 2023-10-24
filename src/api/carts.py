@@ -90,7 +90,7 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                            parameters={"id": cart_id})
         
         connection.execute(sqlalchemy.text("INSERT INTO gold_ledger (change) " 
-                                           "VALUES (subq.total_gold) "
+                                           "SELECT (subq.total_gold) "
                                            "FROM (SELECT cart_items.cart_id, SUM(potions.price * cart_items.quantity) as total_gold "
                                                  "FROM cart_items "
                                                  "JOIN potions ON potions.id = cart_items.potion_id "

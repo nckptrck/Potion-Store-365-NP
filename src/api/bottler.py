@@ -43,7 +43,7 @@ def post_deliver_bottles(potions_delivered: list[PotionInventory]):
             
             connection.execute(sqlalchemy.text(
                 "INSERT INTO potion_ingredients (red_change, green_change, blue_change, dark_change) " 
-                "VALUES (-:red, -:green, -:blue, -:dark)",
+                "VALUES (-:red, -:green, -:blue, -:dark)"),
                 parameters=dict(red = (potion.potion_type[0] * num_potions),
                                 green = (potion.potion_type[1] * num_potions),
                                 blue = (potion.potion_type[2] * num_potions) ,

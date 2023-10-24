@@ -21,25 +21,29 @@ class PotionInventory(BaseModel):
 def post_deliver_bottles(potions_delivered: list[PotionInventory]):
     """ """
 
-    for potion in potions_delivered:
 
-        num_potions = potion.quantity
-        print("type: ", potion.potion_type, "\nquantity: ", potion.quantity, "\n--------")
-    
-        with db.engine.begin() as connection:
+    with db.engine.begin() as connection:
+        for potion in potions_delivered:
+
+            num_potions = potion.quantity
+
+            print("type: ", potion.potion_type, "\nquantity: ", potion.quantity, "\n--------")
+
+
             connection.execute(sqlalchemy.text(
-                "UPDATE potions " 
-                "SET inventory = inventory + :num_potions " 
+                "UPDATE potion_inventory " 
+                "SET potion_id = potions.id, change = :num_potions "
+                "FROM potions " 
                 "WHERE red = :red AND green = :green AND blue = :blue AND dark = :dark"),
                 parameters= dict(num_potions = num_potions,
-                                 red = potion.potion_type[0],
-                                 green = potion.potion_type[1],
-                                 blue = potion.potion_type[2],
-                                 dark = potion.potion_type[3]))
+                                red = potion.potion_type[0],
+                                green = potion.potion_type[1],
+                                blue = potion.potion_type[2],
+                                dark = potion.potion_type[3]))
             
             connection.execute(sqlalchemy.text(
-                "UPDATE resources " 
-                "SET red_ml = red_ml - :red, green_ml = green_ml - :green, blue_ml = blue_ml - :blue, dark_ml = dark_ml - :dark"),
+                "UPDATE potion_ingredients " 
+                "SET red_change =  -:red, green_change = -:green, blue_change = -:blue, dark_change = -:dark"),
                 parameters=dict(red = (potion.potion_type[0] * num_potions),
                                 green = (potion.potion_type[1] * num_potions),
                                 blue = (potion.potion_type[2] * num_potions) ,
@@ -62,16 +66,17 @@ def get_bottle_plan():
 
     # Initial logic: bottle all barrels into red potions.
     with db.engine.begin() as connection:
-        resources = connection.execute(sqlalchemy.text("SELECT red_ml, green_ml, blue_ml FROM resources")).first()
-        potions = connection.execute(sqlalchemy.text("SELECT name, red, green, blue, dark, inventory FROM potions")).all()
+        resources = connection.execute(sqlalchemy.text("SELECT SUM(red_change), SUM(green_change), SUM(blue_change),SUM(dark_change) FROM potion_ingredients")).first()
+        potions = connection.execute(sqlalchemy.text("SELECT name, red, green, blue, dark FROM potions")).all()
         min_red = connection.execute(sqlalchemy.text("SELECT MIN(red) FROM potions WHERE red > 0")).first()
         min_green = connection.execute(sqlalchemy.text("SELECT MIN(green) FROM potions WHERE green > 0")).first()
         min_blue = connection.execute(sqlalchemy.text("SELECT MIN(blue) FROM potions WHERE blue > 0")).first()
-        potion_count = connection.execute(sqlalchemy.text("SELECT SUM(inventory) FROM potions")).first()
+        potion_count = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM potion_inventory")).first()
     
     red_ml = resources[0]
     green_ml = resources[1]
     blue_ml = resources[2]
+    dark_ml = resources[3]
 
     min_red = min_red[0]
     min_green = min_green[0]

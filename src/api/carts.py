@@ -80,17 +80,17 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
     """ """
     print("CHECKING OUT: ", "\n Cart ID: ", cart_id, "\nItems: ", get_cart(cart_id))
     with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("UPDATE potions " 
-                                           "SET inventory = potions.inventory - cart_items.quantity "
+        connection.execute(sqlalchemy.text("UPDATE potion_inventory " 
+                                           "SET potion_id = cart_items.potion_id, change = -cart_items.quantity "
                                            "FROM cart_items "
-                                           "WHERE potions.id = cart_items.potion_id AND cart_items.cart_id = :cart_id"),
+                                           "WHERE cart_items.cart_id = :cart_id"),
                                            parameters= dict(cart_id = cart_id))
         
         connection.execute(sqlalchemy.text("UPDATE customer_carts SET paid = TRUE WHERE id = :id"), 
                            parameters={"id": cart_id})
         
-        connection.execute(sqlalchemy.text("UPDATE resources " 
-                                           "SET gold = resources.gold + subq.total_gold "
+        connection.execute(sqlalchemy.text("UPDATE gold_ledger " 
+                                           "SET change = subq.total_gold "
                                            "FROM (SELECT cart_items.cart_id, SUM(potions.price * cart_items.quantity) as total_gold "
                                                  "FROM cart_items "
                                                  "JOIN potions ON potions.id = cart_items.potion_id "

@@ -31,25 +31,25 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
         
         if pot_type == [1,0,0,0]: #RED
             with db.engine.begin() as connection:
-                update_ml_query = sqlalchemy.text("UPDATE resources SET red_ml = red_ml + :ml_in_barrels")
+                update_ml_query = sqlalchemy.text("INSERT INTO potion_ingredients (red_change) VALUES (:ml_in_barrels)")
                 connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
         elif pot_type == [0,1,0,0]: #GREEN
             with db.engine.begin() as connection:
-                update_ml_query = sqlalchemy.text("UPDATE resources SET green_ml = green_ml + :ml_in_barrels")
+                update_ml_query = sqlalchemy.text("INSERT INTO potion_ingredients (green_change) VALUES (:ml_in_barrels)")
                 connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
         elif pot_type == [0,0,1,0]: #BLUE
             with db.engine.begin() as connection:
-                update_ml_query = sqlalchemy.text("UPDATE resources SET blue_ml = blue_ml + :ml_in_barrels")
+                update_ml_query = sqlalchemy.text("INSERT INTO potion_ingredients (blue_change) VALUES (:ml_in_barrels)")
                 connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
         elif pot_type == [0,0,0,1]: #DARK
             with db.engine.begin() as connection:
-                update_ml_query = sqlalchemy.text("UPDATE resources SET dark_ml = dark_ml + :ml_in_barrels")
+                update_ml_query = sqlalchemy.text("INSERT INTO potion_ingredients (dark_change) VALUES (:ml_in_barrels)")
                 connection.execute(update_ml_query, parameters=(dict(ml_in_barrels=ml_in_barrels)))
 
 
 
     with db.engine.begin() as connection:
-        update_gold_query = sqlalchemy.text("UPDATE resources SET gold = gold - :total_price")
+        update_gold_query = sqlalchemy.text("INSERT INTO gold_ledger (change) VALUES (-:total_price)")
         connection.execute(update_gold_query, parameters=(dict(total_price=total_price)))
 
     
@@ -64,15 +64,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     print("Catalog: ",wholesale_catalog)
 
     with db.engine.begin() as connection:
-        resources = connection.execute(sqlalchemy.text("SELECT red_ml, green_ml, blue_ml, gold FROM resources"))
+        resources = connection.execute(sqlalchemy.text("SELECT SUM(change) as gold FROM gold_ledger"))
         row = resources.first()
+        gold = row[0]
 
-        red = row[0]
-        green = row[1]
-        blue = row[2]
-        gold = row[3]
-
-        min_ml = min(red, green, blue)
     med_red = False
     large_red = False
     med_green = False
@@ -81,11 +76,11 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     barrels_copped = []
     for barrel in wholesale_catalog:
         sku = barrel.sku 
-        if sku == "LARGE_DARK_BARREL" and barrel.price <= gold:
-            barrels_copped.append({"sku": sku,
+        #if sku == "LARGE_DARK_BARREL" and barrel.price <= gold:
+        #   barrels_copped.append({"sku": sku,
                                    "quantity": 1})
-            gold -= barrel.price
-        elif sku == "MEDIUM_RED_BARREL":
+         #   gold -= barrel.price
+        if sku == "MEDIUM_RED_BARREL":
             med_red = True
             mr_price = barrel.price
         elif sku == "MEDIUM_GREEN_BARREL":

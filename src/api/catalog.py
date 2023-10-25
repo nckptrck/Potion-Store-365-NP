@@ -17,7 +17,6 @@ def get_catalog():
         potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, SUM(potion_inventory.change) as inventory, price, red, green, blue, dark "
                                                             "FROM potions LEFT JOIN potion_inventory on potions.id = potion_inventory.potion_id "
                                                             "GROUP BY sku, name, price, red, green, blue, dark "
-                                                            "WHERE inventory > 0 "
                                                             "ORDER BY inventory DESC "
                                                             "LIMIT 6 "
                                                             )).all()
@@ -28,6 +27,8 @@ def get_catalog():
         sku = row[0]
         name = row[1]
         inventory = row[2]
+        if inventory == 0:
+            continue
         price = row[3]
         red = row[4]
         green = row[5]

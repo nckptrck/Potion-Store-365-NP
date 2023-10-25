@@ -115,7 +115,7 @@ def get_bottle_plan():
             else:
                 continue
 
-        if (red_ml + green_ml + blue_ml) <= 100:
+        if (red_ml + green_ml + blue_ml) <= 149:
             break
     
     return bottles

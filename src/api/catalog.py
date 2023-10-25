@@ -16,9 +16,9 @@ def get_catalog():
     with db.engine.begin() as connection:
         potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, SUM(potion_inventory.change) as inventory, price, red, green, blue, dark "
                                                             "FROM potions LEFT JOIN potion_inventory on potions.id = potion_inventory.potion_id "
-                                                            "WHERE inventory > 0 "
                                                             "GROUP BY sku, name, price, red, green, blue, dark "
                                                             "ORDER BY inventory DESC "
+                                                            "WHERE inventory > 0 "
                                                             "LIMIT 6 "
                                                             )).all()
     

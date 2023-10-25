@@ -92,7 +92,7 @@ def get_bottle_plan():
                             "quantity": 0})
 
     while red_ml >= min_red or green_ml >= min_green or blue_ml >= min_blue and potion_count <=300:
-        print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml)
+        print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml, potion_count)
         for potion in potions:
             red = potion[1]
             green = potion[2]

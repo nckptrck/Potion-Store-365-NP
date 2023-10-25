@@ -101,11 +101,12 @@ def get_bottle_plan():
             p_type = [red, green, blue, dark]
             #if blue == 100:
             #    continue
-            if red_ml >= red and green_ml >= green and blue_ml >= blue:
+            if red_ml >= red and green_ml >= green and blue_ml >= blue and dark_ml >= dark:
                 potion_count += 1
                 red_ml -= red
                 green_ml -= green
                 blue_ml -= blue
+                dark_ml -= dark
                 for bottle in  bottles:
                     if bottle["potion_type"] == p_type:
                         print(p_type)

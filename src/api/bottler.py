@@ -119,6 +119,7 @@ def get_bottle_plan():
         if red_ml <= 49 or green_ml <= 49 or blue_ml <= 49:
             break
     
+    print(potion_count)
     return bottles
 
                 

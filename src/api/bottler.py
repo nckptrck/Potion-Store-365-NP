@@ -91,7 +91,7 @@ def get_bottle_plan():
             bottles.append({"potion_type": [red, green ,blue, dark], 
                             "quantity": 0})
 
-    while red_ml >= min_red or green_ml >= min_green or blue_ml >= min_blue and potion_count <=300:
+    while potion_count <=300:
         print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml, potion_count)
         for potion in potions:
             red = potion[1]
@@ -116,7 +116,7 @@ def get_bottle_plan():
             else:
                 continue
 
-        if (red_ml + green_ml + blue_ml) <= 149:
+        if red_ml <= 49 or green_ml <= 49 or blue_ml <= 49:
             break
     
     return bottles

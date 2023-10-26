@@ -70,8 +70,8 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         resources = connection.execute(sqlalchemy.text("SELECT SUM(red_change), SUM(green_change), SUM(blue_change), SUM(dark_change) FROM potion_ingredients")).first()
         total_ml = resources[0] + resources[1] + resources[2] + resources[3]
     
-    if total_ml >= 20000:
-        return []
+    #if total_ml >= 20000:
+    #    return []
 
     
     

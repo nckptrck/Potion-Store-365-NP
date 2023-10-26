@@ -26,7 +26,7 @@ def create_cart(new_cart: NewCart):
             "INSERT INTO customer_carts (customer_name) VALUES (:customer_name) RETURNING id"), 
             parameters=(dict(customer_name = new_cart.customer)))
     
-    index = index.scalar()
+        index = index.scalar()
     print("CREATING CART: ", "\nCart ID: ", index, "\nCustomer Name: ", new_cart.customer)
         
     return {"cart_id": index}

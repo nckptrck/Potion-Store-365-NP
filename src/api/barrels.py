@@ -67,7 +67,14 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         resources = connection.execute(sqlalchemy.text("SELECT SUM(change) as gold FROM gold_ledger"))
         row = resources.first()
         gold = row[0]
+        resources = connection.execute(sqlalchemy.text("SELECT SUM(red_change), SUM(green_change), SUM(blue_change), SUM(dark_change) FROM potion_ingredients")).first()
+        total_ml = resources[0] + resources[1] + resources[2] + resources[3]
+    
+    if total_ml >= 20000:
+        return []
 
+    
+    
     med_red = False
     large_red = False
     med_green = False

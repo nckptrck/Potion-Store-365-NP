@@ -54,7 +54,7 @@ def search_orders(
     Your results must be paginated, the max results you can return at any
     time is 5 total line items.
     """
-    with db.engine.connect() as connection:
+    #with db.engine.connect() as connection:
 
     return {
         "previous": "",

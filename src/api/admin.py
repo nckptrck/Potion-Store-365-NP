@@ -24,7 +24,7 @@ def reset():
         connection.execute(sqlalchemy.text("DELETE FROM cart_items"))
         connection.execute(sqlalchemy.text("DELETE FROM customer_carts"))
         connection.execute(sqlalchemy.text("INSERT INTO gold_ledger (change) VALUES (100)"))
-        
+
     return "OK"
 
 
@@ -34,7 +34,7 @@ def get_shop_info():
 
     # TODO: Change me!
     return {
-        "shop_name": "Patrick's Powerful Potions",
+        "shop_name": "Campus Bottle Speakeasy",
         "shop_owner": "Nick Patrick",
     }
 

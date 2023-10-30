@@ -99,7 +99,7 @@ def get_bottle_plan():
             blue = potion[3]
             dark = potion[4]
             p_type = [red, green, blue, dark]
-            if p_type == [0,0,75,25]:
+            if p_type == [0,0,75,25] or p_type == [7,7,7,79]:
                 continue
             if red_ml >= red and green_ml >= green and blue_ml >= blue and dark_ml >= dark:
                 potion_count += 1

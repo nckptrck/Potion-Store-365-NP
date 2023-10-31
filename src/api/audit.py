@@ -20,7 +20,7 @@ def get_inventory():
         potions = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM potion_inventory")).first()
         
         total_ml = 0
-        if resources:
+        if resources is not None:
             for resource in resources:
                 total_ml += resource
         gold = gold[0]

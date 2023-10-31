@@ -81,7 +81,7 @@ def search_orders(
         elif sort_col == search_sort_options.line_item_total:
             order_by = search_table.c.gold
         else:
-            order_by = search_table.c.timestamp
+            order_by = search_table.c.created_at
 
         if sort_order == search_sort_order.asc:
             base_q = base_q.order_by(order_by.asc())

@@ -88,7 +88,7 @@ def get_bottle_plan():
             bottles.append({"potion_type": [red, green ,blue, dark], 
                             "quantity": 0})
 
-    while potion_count <=290:
+    while potion_count <=289:
         print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml, "\npotion count: ", potion_count)
         for potion in potions:
             red = potion[1]

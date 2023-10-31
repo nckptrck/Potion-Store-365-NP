@@ -23,6 +23,7 @@ def reset():
         connection.execute(sqlalchemy.text("DELETE FROM gold_ledger"))
         connection.execute(sqlalchemy.text("DELETE FROM cart_items"))
         connection.execute(sqlalchemy.text("DELETE FROM customer_carts"))
+        connection.execute(sqlalchemy.text("DELETE FROM search_table"))
         connection.execute(sqlalchemy.text("INSERT INTO gold_ledger (change) VALUES (100)"))
 
     return "OK"

@@ -68,20 +68,17 @@ def get_bottle_plan():
     with db.engine.begin() as connection:
         resources = connection.execute(sqlalchemy.text("SELECT SUM(red_change), SUM(green_change), SUM(blue_change),SUM(dark_change) FROM potion_ingredients")).first()
         potions = connection.execute(sqlalchemy.text("SELECT name, red, green, blue, dark FROM potions")).all()
-        min_red = connection.execute(sqlalchemy.text("SELECT MIN(red) FROM potions WHERE red > 0")).first()
-        min_green = connection.execute(sqlalchemy.text("SELECT MIN(green) FROM potions WHERE green > 0")).first()
-        min_blue = connection.execute(sqlalchemy.text("SELECT MIN(blue) FROM potions WHERE blue > 0")).first()
+        
         potion_count = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM potion_inventory")).first()
     
-    red_ml = resources[0]
-    green_ml = resources[1]
-    blue_ml = resources[2]
-    dark_ml = resources[3]
+        if len(resources) >= 1:
+            red_ml = resources[0]
+            green_ml = resources[1]
+            blue_ml = resources[2]
+            dark_ml = resources[3]
 
-    min_red = min_red[0]
-    min_green = min_green[0]
-    min_blue = min_blue[0]
-    potion_count = potion_count[0]
+        if len(potion_count) == 1:
+            potion_count = potion_count[0]
     bottles = []
     for potion in potions:
             red = potion[1]

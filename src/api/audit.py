@@ -19,9 +19,11 @@ def get_inventory():
         gold = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM gold_ledger")).first()
         potions = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM potion_inventory")).first()
         
-    total_ml = resources[0] + resources[1] + resources[2] + resources[3]
-    gold = gold[0]
-    total_potions = potions[0]
+        for resource in resources:
+            total_ml += resource
+        gold = gold[0]
+        if len(potions) == 1:
+            total_potions = potions[0]
 
 
         

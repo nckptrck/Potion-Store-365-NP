@@ -93,7 +93,7 @@ def search_orders(
                 "line_item_id": idx,  
                 "item_sku": row.potion_name,
                 "customer_name": row.customer_name,
-                "line_item_total": row.quantity,
+                "line_item_total": row.gold,
                 "timestamp": row.created_at
             })
 

@@ -75,11 +75,11 @@ def search_orders(
         
 
         if sort_col == search_sort_options.customer_name:
-            order_by = search_table.customer_name
+            order_by = search_table.c.customer_name
         elif sort_col == search_sort_options.item_sku:
-            order_by = search_table.potion_name
+            order_by = search_table.c.potion_name
         elif sort_col == search_sort_options.line_item_total:
-            order_by = search_table.gold
+            order_by = search_table.c.gold
         else:
             order_by = search_table.timestamp
 

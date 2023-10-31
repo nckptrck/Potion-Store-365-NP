@@ -54,21 +54,53 @@ def search_orders(
     Your results must be paginated, the max results you can return at any
     time is 5 total line items.
     """
-    #if sort_col ==
-    #with db.engine.connect() as connection:
+    
+    with db.engine.connect() as connection:
+        base_q = sqlalchemy.select(
+                                    search_table.c.customer_name,
+                                    search_table.c.potion_name,
+                                    search_table.c.quantity,
+                                    search_table.c.gold,
+                                    search_table.c.created_at)
+                                                            
+        
+        if len(customer_name) != 0:
+            base_q = base_q.where(search_table.c.customer_name.ilike(f"%{customer_name}%"))
+
+        if len(potion_sku) != 0:
+            base_q = base_q.where(search_table.c.customer_name.ilike(f"%{potion_sku}%"))
+        
+
+        if sort_col == search_sort_options.customer_name:
+            order_by = search_table.customer_name
+        elif sort_col == search_sort_options.item_sku:
+            order_by = search_table.item_sku
+        elif sort_col == search_sort_options.line_item_total:
+            order_by = search_table.line_item_total
+        else:
+            order_by = search_table.timestamp
+
+        if sort_order == search_sort_order.asc:
+            base_q = base_query.order_by(order_by.asc())
+        else:
+            base_q  = base_query.order_by(order_by.desc())
+        
+        results = connection.execute(base_q.limit(5))
+
+        result_list = []
+        for idx, row in enumerate(results, 1):  
+            result_list.append({
+                "line_item_id": idx,  
+                "item_sku": row.potion_name,
+                "customer_name": row.customer_name,
+                "line_item_total": row.quantity,
+                "timestamp": row.created_at
+            })
 
     return {
         "previous": "",
         "next": "",
-        "results": [
-            {
-                "line_item_id": 1,
-                "item_sku": "1 oblivion potion",
-                "customer_name": "Scaramouche",
-                "line_item_total": 50,
-                "timestamp": "2021-01-01T00:00:00Z",
-            }
-        ],
+        "results": result_list,
     }
 
 
@@ -159,8 +191,8 @@ def checkout(cart_id: int, cart_checkout: CartCheckout):
                                            ),
                                            parameters= dict(cart_id = cart_id))
         
-        connection.execute(sqlalchemy.text("INSERT INTO search_table (customer_name, potion_name, quantity) " 
-                                           "SELECT customer_carts.customer_name, potions.name, cart_items.quantity "
+        connection.execute(sqlalchemy.text("INSERT INTO search_table (customer_name, potion_name, quantity, gold) " 
+                                           "SELECT customer_carts.customer_name, potions.name, cart_items.quantity, potions.price * cart_items.quantity "
                                            "FROM cart_items "
                                            "JOIN customer_carts on customer_carts.id = cart_items.cart_id "
                                            "JOIN potions on cart_items.potion_id = potions.id "

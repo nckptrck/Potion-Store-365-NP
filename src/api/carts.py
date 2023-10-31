@@ -22,6 +22,9 @@ class search_sort_order(str, Enum):
     asc = "asc"
     desc = "desc"   
 
+metadata_obj = sqlalchemy.MetaData()
+search_table = sqlalchemy.Table("search_table", metadata_obj, autoload_with=db.engine)
+
 @router.get("/search/", tags=["search"])
 def search_orders(
     customer_name: str = "",
@@ -68,7 +71,7 @@ def search_orders(
             base_q = base_q.where(search_table.c.customer_name.ilike(f"%{customer_name}%"))
 
         if len(potion_sku) != 0:
-            base_q = base_q.where(search_table.c.customer_name.ilike(f"%{potion_sku}%"))
+            base_q = base_q.where(search_table.c.potion_name.ilike(f"%{potion_sku}%"))
         
 
         if sort_col == search_sort_options.customer_name:
@@ -81,9 +84,9 @@ def search_orders(
             order_by = search_table.timestamp
 
         if sort_order == search_sort_order.asc:
-            base_q = base_query.order_by(order_by.asc())
+            base_q = base_q.order_by(order_by.asc())
         else:
-            base_q  = base_query.order_by(order_by.desc())
+            base_q  = base_q.order_by(order_by.desc())
         
         results = connection.execute(base_q.limit(5))
 

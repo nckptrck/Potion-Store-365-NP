@@ -90,6 +90,7 @@ def get_bottle_plan():
 
     while potion_count <=289:
         print("red ml: ", red_ml, "\ngreen ml: ", green_ml, "\nblue ml: ", blue_ml, "\npotion count: ", potion_count)
+        make_more = False
         for potion in potions:
             red = potion[1]
             green = potion[2]
@@ -99,6 +100,7 @@ def get_bottle_plan():
             if p_type == [0,0,75,25] or p_type == [7,7,7,79]:
                 continue
             if red_ml >= red and green_ml >= green and blue_ml >= blue and dark_ml >= dark:
+                make_more = True
                 potion_count += 1
                 red_ml -= red
                 green_ml -= green
@@ -113,7 +115,7 @@ def get_bottle_plan():
             else:
                 continue
 
-        if red_ml + green_ml + blue_ml <= 99:
+        if not make_more:
             break
     
     print(potion_count)

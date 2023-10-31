@@ -92,9 +92,11 @@ def search_orders(
 
         result_list = []
         for idx, row in enumerate(results, 1):  
+            quant = str(row.quantity)
+            sku = quant + " " + row.potion_name + "s"
             result_list.append({
                 "line_item_id": idx,  
-                "item_sku": row.potion_name,
+                "item_sku": sku,
                 "customer_name": row.customer_name,
                 "line_item_total": row.gold,
                 "timestamp": row.created_at

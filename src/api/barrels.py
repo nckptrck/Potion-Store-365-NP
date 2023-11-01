@@ -83,10 +83,10 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     barrels_copped = []
     for barrel in wholesale_catalog:
         sku = barrel.sku 
-        #if sku == "LARGE_DARK_BARREL" and barrel.price <= gold:
-        #   barrels_copped.append({"sku": sku,
-        #                           "quantity": 1})
-         #   gold -= barrel.price
+        if sku == "LARGE_DARK_BARREL" and barrel.price <= gold:
+            barrels_copped.append({"sku": sku,
+                                   "quantity": 1})
+            gold -= barrel.price
         if sku == "MEDIUM_RED_BARREL":
             med_red = True
             mr_price = barrel.price

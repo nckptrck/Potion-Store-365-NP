@@ -113,6 +113,13 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         barrels_copped.append({"sku": "LARGE_GREEN_BARREL",
                                "quantity": 1})
         gold -= (mb_price + lr_price + lg_price)
+    elif med_red and med_green and med_blue and gold >= ((mr_price + mg_price + mb_price) * 2):
+        barrels_copped.append({"sku": "MEDIUM_BLUE_BARREL",
+                               "quantity": 2})
+        barrels_copped.append({"sku": "MEDIUM_RED_BARREL",
+                               "quantity": 2})
+        barrels_copped.append({"sku": "MEDIUM_GREEN_BARREL",
+                               "quantity": 2})
     elif large_green and large_red and gold >= (lr_price + lg_price + 120):
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
                                "quantity": 1})

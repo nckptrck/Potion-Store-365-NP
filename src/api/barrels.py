@@ -181,6 +181,13 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                                "quantity": 1})
         barrels_copped.append({"sku": "SMALL_RED_BARREL",
                                "quantity": 1})
+     elif gold >= 1600:
+        barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
+                               "quantity": 5})
+        barrels_copped.append({"sku": "SMALL_RED_BARREL",
+                               "quantity": 5})
+        barrels_copped.append({"sku": "SMALL_GREEN_BARREL",
+                               "quantity": 5})
     elif gold >= 960:
         barrels_copped.append({"sku": "SMALL_BLUE_BARREL",
                                "quantity": 3})

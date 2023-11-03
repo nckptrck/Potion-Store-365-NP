@@ -80,6 +80,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     med_green = False
     large_green = False
     med_blue = False
+    large_blue = False
     barrels_copped = []
     for barrel in wholesale_catalog:
         sku = barrel.sku 

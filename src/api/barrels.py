@@ -62,7 +62,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print("Catalog: ",wholesale_catalog)
-
+"""
     with db.engine.begin() as connection:
         resources = connection.execute(sqlalchemy.text("SELECT SUM(change) as gold FROM gold_ledger"))
         row = resources.first()
@@ -215,6 +215,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         gold -= 100
 
 
-
+        """
     return barrels_copped
     

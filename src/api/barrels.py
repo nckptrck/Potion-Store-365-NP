@@ -62,7 +62,7 @@ def post_deliver_barrels(barrels_delivered: list[Barrel]):
 def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     """ """
     print("Catalog: ",wholesale_catalog)
-"""
+
     with db.engine.begin() as connection:
         resources = connection.execute(sqlalchemy.text("SELECT SUM(change) as gold FROM gold_ledger"))
         row = resources.first()
@@ -82,12 +82,12 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
     med_blue = False
     large_blue = False
     barrels_copped = []
+    large_dark = False
     for barrel in wholesale_catalog:
         sku = barrel.sku 
         if sku == "LARGE_DARK_BARREL" and barrel.price <= gold:
-            barrels_copped.append({"sku": sku,
-                                   "quantity": 1})
-            gold -= barrel.price
+            large_dark = True
+            ld_price = barrel.price
         if sku == "MEDIUM_RED_BARREL":
             med_red = True
             mr_price = barrel.price
@@ -109,14 +109,19 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
         else:
             continue
     
-    if large_blue and large_green and large_red and gold >= (lb_price + lg_price + lr_price):
+    if large_blue and large_green and large_red and large_dark and gold >= ((lb_price + lg_price + lr_price + ld_price) *3):
         barrels_copped.append({"sku": "LARGE_BLUE_BARREL",
-                               "quantity": 1})
+                               "quantity": 3})
         barrels_copped.append({"sku": "LARGE_RED_BARREL",
-                               "quantity": 1})
+                               "quantity": 3})
         barrels_copped.append({"sku": "LARGE_GREEN_BARREL",
-                               "quantity": 1})
-    elif med_blue and large_green and large_red and gold >= (mb_price + lr_price + lg_price):
+                               "quantity": 3})
+        barrels_copped.append({"sku": "LARGE_DARK_BARREL",
+                               "quantity": 3})
+        
+
+    return barrels_copped
+""" elif med_blue and large_green and large_red and gold >= (mb_price + lr_price + lg_price):
         barrels_copped.append({"sku": "MEDIUM_BLUE_BARREL",
                                "quantity": 1})
         barrels_copped.append({"sku": "LARGE_RED_BARREL",
@@ -214,7 +219,6 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                                "quantity": 1})
         gold -= 100
 
+"""
 
-        """
-    return barrels_copped
     

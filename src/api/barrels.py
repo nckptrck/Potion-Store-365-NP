@@ -120,7 +120,7 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[Barrel]):
                                "quantity": 3})
         
 
-    return barrels_copped
+    return []
 """ elif med_blue and large_green and large_red and gold >= (mb_price + lr_price + lg_price):
         barrels_copped.append({"sku": "MEDIUM_BLUE_BARREL",
                                "quantity": 1})

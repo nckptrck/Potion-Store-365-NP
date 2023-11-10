@@ -14,7 +14,24 @@ def get_catalog():
 
     # Can return a max of 20 items.
     with db.engine.begin() as connection:
-        potions_result = connection.execute(sqlalchemy.text("SELECT sku, name, SUM(potion_inventory.change) as inventory, price, red, green, blue, dark "
+        recent_sales = connection.execute(sqlalchemy.text(  "WITH recentsales as (  "
+                                                            "SELECT potion_name, sum(quantity) as recentsales "
+                                                            "FROM search_table "
+                                                            "WHERE created_at >= now() - interval '2 hours' "
+                                                            "GROUP BY potion_name), "
+
+                                                            "inventory as ( "
+                                                            "select potions.sku, potions.id, potions.name, SUM(change) as Inventory, potions.price, red, green, blue, dark "
+                                                            "from potion_inventory "
+                                                            "right join potions on potions.id = potion_inventory.potion_id "
+                                                            "group by potions.id "
+                                                            "order by Inventory desc) "
+
+                                                            "SELECT sku, name, recentsales, inventory, price, red, green, blue, dark "
+                                                            "FROM recentsales "
+                                                            "LEFT JOIN inventory on inventory.name = recentsales.potion_name "
+                                                            "ORDER BY recentsales")).all()
+        potions_inventory = connection.execute(sqlalchemy.text("SELECT sku, name, SUM(potion_inventory.change) as inventory, price, red, green, blue, dark "
                                                             "FROM potions LEFT JOIN potion_inventory on potions.id = potion_inventory.potion_id "
                                                             "GROUP BY sku, name, price, red, green, blue, dark "
                                                             "ORDER BY inventory DESC "
@@ -23,7 +40,29 @@ def get_catalog():
     
     catalog = []
     print("CATELOG: ")
-    for row in potions_result:
+    for row in recent_sales:
+        sku = row[0]
+        name = row[1]
+        inventory = row[3]
+        if inventory == 0:
+            continue
+        price = row[4]
+        red = row[5]
+        green = row[6]
+        blue = row[7]
+        dark = row[8]
+
+        item = {
+                    "sku": sku,
+                    "name": name,
+                    "quantity": inventory,
+                    "price": price,
+                    "potion_type": [red,green,blue,dark],
+                }
+     
+        catalog.append(item)
+
+    for row in potions_inventory:
         sku = row[0]
         name = row[1]
         inventory = row[2]
@@ -49,8 +88,8 @@ def get_catalog():
                     "price": price,
                     "potion_type": [red,green,blue,dark],
                 }
-     
-        catalog.append(item)
+        if item not in catalog and len(catalog) < 6:
+            catalog.append(item)
 
     return catalog
     

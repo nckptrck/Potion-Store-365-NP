@@ -67,7 +67,12 @@ def get_bottle_plan():
     # Initial logic: bottle all barrels into red potions.
     with db.engine.begin() as connection:
         resources = connection.execute(sqlalchemy.text("SELECT SUM(red_change), SUM(green_change), SUM(blue_change),SUM(dark_change) FROM potion_ingredients")).first()
-        potions = connection.execute(sqlalchemy.text("SELECT name, red, green, blue, dark FROM potions")).all()
+        potions = connection.execute(sqlalchemy.text(   "select potions.id, red, green, blue, dark, potions.name, SUM(change) as Inventory, potions.price "
+                                                        "from potion_inventory "
+                                                        "right join potions on potions.id = potion_inventory.potion_id "
+                                                        "group by potions.id "
+                                                        "order by Inventory "
+                                                        "LIMIT 9")).all()
         
         potion_count = connection.execute(sqlalchemy.text("SELECT SUM(change) FROM potion_inventory")).first()
     
@@ -85,6 +90,9 @@ def get_bottle_plan():
             green = potion[2]
             blue = potion[3]
             dark = potion[4]
+            p_type = [red, green, blue, dark]
+            if p_type == [0,0,75,25] or p_type == [7,7,7,79] or p_type == [0,50,0,50]:
+                continue
             bottles.append({"potion_type": [red, green ,blue, dark], 
                             "quantity": 0})
 

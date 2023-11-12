@@ -30,6 +30,7 @@ def get_catalog():
                                                             "SELECT sku, name, recentsales, inventory, price, red, green, blue, dark "
                                                             "FROM recentsales "
                                                             "LEFT JOIN inventory on inventory.name = recentsales.potion_name "
+                                                            "WHERE recentsales > 3 "
                                                             "ORDER BY recentsales")).all()
         potions_inventory = connection.execute(sqlalchemy.text("SELECT sku, name, SUM(potion_inventory.change) as inventory, price, red, green, blue, dark "
                                                             "FROM potions LEFT JOIN potion_inventory on potions.id = potion_inventory.potion_id "
